@@ -38,9 +38,7 @@ def getFBLikes(PageName, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET ):
 	except KeyError:
 		print('Unable to grab an access token!')
 		exit()
-		
-	#required token generated from here, note this expired https://developers.facebook.com/tools/explorer/?method=GET&path=TopdeckTravel%3Ffields%3Dfan_count&version=v2.8
-	#fb_auth_token = "xxxxxxxxxxxx"
+	
 	#actual request we sent to facebook 
 	fb_request = "https://graph.facebook.com/v2.8/" + PageName + "?fields=fan_count&access_token=" + oauth_access_token
 	#send request and store in r
