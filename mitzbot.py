@@ -31,6 +31,7 @@ worksheet = SocialPageDetails.worksheet
 fbcolumn = SocialPageDetails.fbcolumn
 igcolumn = SocialPageDetails.igcolumn
 twittercolumn = SocialPageDetails.twittercolumn
+storagefile = SocialPageDetails.storagefile
 ###########################
 timeanddate = time.strftime("%c")
 date = (time.strftime("%d/%m/%Y"))
@@ -98,4 +99,4 @@ print "IG Followers: %s" % IGfollowers
 print "Twitter Followers: %s" %twitterfollowers
 
 #run the update sheets function
-updategooglesheets(spreadsheet,worksheet,timeanddate,FBlikes,fbcolumn,IGfollowers,igcolumn,twitterfollowers,twittercolumn)
+updategooglesheets(storagefile,spreadsheet,worksheet,timeanddate,FBlikes,fbcolumn,IGfollowers,igcolumn,twitterfollowers,twittercolumn)
