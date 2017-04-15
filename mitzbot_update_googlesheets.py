@@ -1,12 +1,14 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+secretfile = ''
+
 #function takes the following values in the format social channel, column to write it in
 def updategooglesheets(spreadsheet,worksheet,gdate,gfblikes,fbcolumn,gigfollowers,igcolumn,gtwitterfollwers,twittercolumn):
 	# use creds to create a client to interact with the Google Drive API
 	# creds set here https://console.developers.google.com/apis/credentials?project=healthy-kayak-161520
 	scope = ['https://spreadsheets.google.com/feeds']
-	creds = ServiceAccountCredentials.from_json_keyfile_name('/home/PythonScripts/client_secret.json', scope)
+	creds = ServiceAccountCredentials.from_json_keyfile_name(secretfile, scope)
 	client = gspread.authorize(creds)
 
 	# Find a workbook by name and open the first sheet
