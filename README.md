@@ -27,4 +27,4 @@ Note the Facebook portion requires use of the Facebook Graph API, which requires
 Edit config.py with the Social Media page\s you want to check,  your Facebook App ID and Secret, your Google Sheets Name and Worksheet, the and the columns to put data in.  Place your Google Client Secret .json file somewhere and then update "secretfile" with the full path in the googlesheet update file. 
 
 #Usage:
-Run mitzbot.py [name of config file]
+Run mitzbot.py [name of config file], for example "mitzbot.py config"
