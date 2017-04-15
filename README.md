@@ -1,5 +1,5 @@
 # mitzbot
-Python 2.7 Script to collect Social Media Stats (Follwers/Likes) from Facebook, Instagram and Twitter for a specified page
+Python 2.7 Script to collect Social Media Stats (Follwers/Likes) from Facebook, Instagram and Twitter for a specified page and store in a Google Sheet document
 
 Requires the following non-stock libraries:
 
