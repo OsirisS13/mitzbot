@@ -4,7 +4,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 secretfile = ''
 
 #function takes the following values in the format social channel, column to write it in
-def updategooglesheets(spreadsheet,worksheet,gdate,gfblikes,fbcolumn,gigfollowers,igcolumn,gtwitterfollwers,twittercolumn):
+def updategooglesheets(storagefile, spreadsheet,worksheet,gdate,gfblikes,fbcolumn,gigfollowers,igcolumn,gtwitterfollwers,twittercolumn):
 	# use creds to create a client to interact with the Google Drive API
 	# creds set here https://console.developers.google.com/apis/credentials?project=healthy-kayak-161520
 	scope = ['https://spreadsheets.google.com/feeds']
@@ -22,7 +22,7 @@ def updategooglesheets(spreadsheet,worksheet,gdate,gfblikes,fbcolumn,gigfollower
 	#if we dont do this we need to iterate over all the rows which takes a long time when there are heaps of data
 	try:
 		#open file
-		current_row_from_file = open("lastwrittenrow.txt","r")
+		current_row_from_file = open(storagefile,"r")
 		#read file and convert result to integer
 		current_row = int(current_row_from_file.read())
 		#close file
@@ -37,7 +37,7 @@ def updategooglesheets(spreadsheet,worksheet,gdate,gfblikes,fbcolumn,gigfollower
 		if sheet.cell(current_row,1).value == "":
 			next_empty_row = current_row
 			#open file to store
-			current_row_from_file = open("lastwrittenrow.txt","w")
+			current_row_from_file = open(storagefile,"w")
 			#write the new row number as string
 			current_row_from_file.write(str(current_row))
 			#close file
