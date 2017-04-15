@@ -1,9 +1,8 @@
+#!/usr/bin/python
+# coding: utf-8
 #need to disable requests warnings coz it throws some error about https that we dont care about
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
-#!/usr/bin/python
-# coding: utf-8
-
 import facebook
 import urllib
 import urlparse
@@ -13,39 +12,65 @@ import time
 import json
 import requests
 from bs4 import BeautifulSoup
+#for taking command line arguments
+import sys
+#google sheets imports
+from mitzbot_update_googlesheets import updategooglesheets
+#program takes details from the file specified in the launching arguments
+detailsfile = str(sys.argv[1])
+SocialPageDetails = __import__(detailsfile)
 #########################
-#variables to replace to change which pages to check
-Mitzbot_FB_APP_ID     = 'xxxxxxxx'
-Mitzbot_FB_APP_SECRET = 'xxxxxxxxxxxx'
-FBPageName = "xxxxxxxx"
-twitterusername = 'xxxxxxxx'
-IGusername = "xxxxxxxx"
+#now assign all variables from the details file locally into this one
+Mitzbot_FB_APP_ID  = SocialPageDetails.Mitzbot_FB_APP_ID
+Mitzbot_FB_APP_SECRET = SocialPageDetails.Mitzbot_FB_APP_SECRET
+FBPageName = SocialPageDetails.FBPageName
+twitterusername = SocialPageDetails.twitterusername
+IGusername = SocialPageDetails.IGusername
+spreadsheet = SocialPageDetails.spreadsheet
+worksheet = SocialPageDetails.worksheet
+fbcolumn = SocialPageDetails.fbcolumn
+igcolumn = SocialPageDetails.igcolumn
+twittercolumn = SocialPageDetails.twittercolumn
 ###########################
-date = time.strftime("%c")
-def getFBLikes(PageName, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET ):
-	# Trying to get an access token. Very awkward.  see http://stackoverflow.com/questions/3058723/programmatically-getting-an-access-token-for-using-the-facebook-graph-api
-	oauth_args = dict(client_id     = FACEBOOK_APP_ID,
-					  client_secret = FACEBOOK_APP_SECRET,
-					  grant_type    = 'client_credentials')
-	oauth_curl_cmd = ['curl',
-					  'https://graph.facebook.com/oauth/access_token?' + urllib.urlencode(oauth_args)]
-	oauth_response = subprocess.Popen(oauth_curl_cmd,
-									  stdout = subprocess.PIPE,
-									  stderr = subprocess.PIPE).communicate()[0]
+timeanddate = time.strftime("%c")
+date = (time.strftime("%d/%m/%Y"))
 
-	try:
-		oauth_access_token = urlparse.parse_qs(str(oauth_response))['access_token'][0]
-	except KeyError:
-		print('Unable to grab an access token!')
-		exit()
-	
+def get_fb_token(app_id, app_secret):           
+    payload = {'grant_type': 'client_credentials', 'client_id': app_id, 'client_secret': app_secret}
+    file = requests.post('https://graph.facebook.com/oauth/access_token?', params = payload)
+    #print file.text #to test what the FB api responded with    
+    result = file.text.split("=")[1]
+    #print file.text #to test the TOKEN
+    return result
+
+def getFBLikes(PageName, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET ):
+	#all un needed shit now, just send app ID and app secret direct
+	# # Trying to get an access token. Very awkward.  see http://stackoverflow.com/questions/3058723/programmatically-getting-an-access-token-for-using-the-facebook-graph-api
+	# oauth_args = dict(client_id     = FACEBOOK_APP_ID,
+					  # client_secret = FACEBOOK_APP_SECRET,
+					  # grant_type    = 'client_credentials')
+	# oauth_curl_cmd = ['curl',
+					  # 'https://graph.facebook.com/oauth/access_token?' + urllib.urlencode(oauth_args)]
+	# oauth_response = subprocess.Popen(oauth_curl_cmd,
+									  # stdout = subprocess.PIPE,
+									  # stderr = subprocess.PIPE).communicate()[0]
+	# print oauth_response
+	# try:
+		# oauth_access_token = urlparse.parse_qs(str(oauth_response))['access_token'][0]
+	# except KeyError as e:
+		# print('Unable to grab an access token!')
+		# print e
+		# exit()
+		
+	#sending app ID and app Secret direct
+	oauth_access_token = FACEBOOK_APP_ID +'|' + FACEBOOK_APP_SECRET
+		
 	#actual request we sent to facebook 
 	fb_request = "https://graph.facebook.com/v2.8/" + PageName + "?fields=fan_count&access_token=" + oauth_access_token
 	#send request and store in r
 	r = requests.get(fb_request)
 	#store parsed json response in variable
 	fb_data = json.loads(r.text)
-	#print fb_data
 	#extract likes and store in variable
 	likes = fb_data['fan_count']
 	return likes
@@ -74,11 +99,22 @@ def getTwitterfollowers(username):
 	twitterfollowers = twitterfollowers.replace(',', '')
 	return twitterfollowers
 
-FBlikes = getFBLikes(FBPageName, Mitzbot_FB_APP_ID, Mitzbot_FB_APP_SECRET)
-IGfollowers = getIGfollowers(IGusername)
-twitterfollowers = getTwitterfollowers(twitterusername)
-print "Social Stats as at %s: " %(date)
+try:
+	FBlikes = getFBLikes(FBPageName, Mitzbot_FB_APP_ID, Mitzbot_FB_APP_SECRET)
+except:
+	FBlikes = ""
+try:
+	IGfollowers = getIGfollowers(IGusername)
+except:
+	IGfollowers = ""
+try:
+	twitterfollowers = getTwitterfollowers(twitterusername)
+except:
+	twitterfollowers = ""
+print "%s Social Stats as at %s: "  %(FBPageName, timeanddate)
 print "FB Likes: %s"  %FBlikes
 print "IG Followers: %s" % IGfollowers
 print "Twitter Followers: %s" %twitterfollowers
- 
+
+#run the update sheets function
+updategooglesheets(spreadsheet,worksheet,timeanddate,FBlikes,fbcolumn,IGfollowers,igcolumn,twitterfollowers,twittercolumn)
