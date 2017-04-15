@@ -44,27 +44,8 @@ def get_fb_token(app_id, app_secret):
     return result
 
 def getFBLikes(PageName, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET ):
-	#all un needed shit now, just send app ID and app secret direct
-	# # Trying to get an access token. Very awkward.  see http://stackoverflow.com/questions/3058723/programmatically-getting-an-access-token-for-using-the-facebook-graph-api
-	# oauth_args = dict(client_id     = FACEBOOK_APP_ID,
-					  # client_secret = FACEBOOK_APP_SECRET,
-					  # grant_type    = 'client_credentials')
-	# oauth_curl_cmd = ['curl',
-					  # 'https://graph.facebook.com/oauth/access_token?' + urllib.urlencode(oauth_args)]
-	# oauth_response = subprocess.Popen(oauth_curl_cmd,
-									  # stdout = subprocess.PIPE,
-									  # stderr = subprocess.PIPE).communicate()[0]
-	# print oauth_response
-	# try:
-		# oauth_access_token = urlparse.parse_qs(str(oauth_response))['access_token'][0]
-	# except KeyError as e:
-		# print('Unable to grab an access token!')
-		# print e
-		# exit()
-		
 	#sending app ID and app Secret direct
-	oauth_access_token = FACEBOOK_APP_ID +'|' + FACEBOOK_APP_SECRET
-		
+	oauth_access_token = FACEBOOK_APP_ID +'|' + FACEBOOK_APP_SECRET	
 	#actual request we sent to facebook 
 	fb_request = "https://graph.facebook.com/v2.8/" + PageName + "?fields=fan_count&access_token=" + oauth_access_token
 	#send request and store in r
