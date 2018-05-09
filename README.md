@@ -28,3 +28,6 @@ Edit config.py with the Social Media page\s you want to check,  your Facebook Ap
 
 # Usage:
 Run mitzbot.py [name of config file], for example "mitzbot.py config"
+
+# Note:
+The Instagram function no longer will work due to Instagram deprecating their API as of early 2018
