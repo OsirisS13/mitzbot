@@ -11,5 +11,4 @@ worksheet = ""
 fbcolumn = 
 igcolumn = 
 twittercolumn = 
-#storage file that the mitzbot_update_googlesheets module stores and reads the last written row from
-storagefile = "last_written_row.txt"
+
